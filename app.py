@@ -7,13 +7,11 @@ app = App()
 # Configura el entorno con la cuenta y la región de AWS
 env = Environment(account="276665510567", region="us-east-1")
 
-
+synthesizer = DefaultStackSynthesizer(
+    qualifier='ec2proj',
+    cloud_formation_execution_role='arn:aws:iam::276665510567:role/LabRole'
+) 
 # Inicializa el stack con el entorno configurado
-Ec2ProyectoStack(app, "Ec2ProyectoStack", env=env,{
-  synthesizer: new DefaultStackSynthesizer({
-    qualifier: 'ec2proj',
-    cloudFormationExecutionRole :'arn:aws:iam::276665510567:role/LabRole'
-  }),
-})
+Ec2ProyectoStack(app, "Ec2ProyectoStack", env=env,synthesizer= synthesizer)
 
 app.synth()
