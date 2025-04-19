@@ -301,10 +301,6 @@ Outputs:
     Export:
       Name:
         Fn::Sub: CdkBootstrap-${Qualifier}-FileAssetKeyArn
-  ImageRepositoryName:
-    Description: The name of the ECR repository which hosts docker image assets
-    Value:
-      Fn::Sub: ${ContainerAssetsRepository}
   BootstrapVersion:
     Description: The version of the bootstrap resources that are currently mastered in this stack
     Value:
