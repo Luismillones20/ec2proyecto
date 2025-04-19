@@ -32,24 +32,11 @@ class Ec2ProyectoStack(Stack):
             "Allow HTTP access from anywhere"
         )
 
-        # Crear la instancia EC2 con el grupo de seguridad y un nombre especificado
+        # Crear la instancia EC2 con el grupo de seguridad
         instance = ec2.CfnInstance(self, "MyInstance",
             instance_type="t2.micro",  # Ajusta el tipo de instancia según sea necesario
             image_id="ami-0363234289a7b6202",  # ID de la AMI de "Cloud9ubuntu22"
             subnet_id=vpc.public_subnets[0].subnet_id,  # Usando la primera subred pública del VPC por defecto
             key_name="vockey",  # Usamos 'vockey' como el par de claves existente
             security_group_ids=[security_group.security_group_id],  # Asignamos el grupo de seguridad creado
-            tags=[{
-                'Key': 'Name',  # Etiqueta para el nombre de la instancia
-                'Value': 'MVDesarrollo'  # Nombre de la instancia en AWS
-            }],
-            block_device_mappings=[  # Configuración del disco EBS
-                ec2.CfnInstance.BlockDeviceMappingProperty(
-                    device_name="/dev/xvda",  # Nombre del dispositivo
-                    ebs=ec2.CfnInstance.EbsProperty(
-                        volume_size=20,  # Tamaño del disco (20 GB)
-                        volume_type="gp2"  # Tipo de volumen (General Purpose SSD)
-                    )
-                )
-            ]
         )
