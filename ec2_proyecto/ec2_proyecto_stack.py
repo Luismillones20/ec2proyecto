@@ -9,13 +9,12 @@ class Ec2ProyectoStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
 
-        # Crear un VPC (Virtual Private Cloud) para la instancia EC2
-        vpc = ec2.Vpc(self, "MyVpc", max_azs=3)  # Puedes cambiar el número de zonas de disponibilidad según lo necesites
-
+        # Usar el VPC por defecto
+        vpc = ec2.Vpc.from_lookup(self, "MyDefaultVpc", is_default=True)  # Esto obtiene el VPC por defecto
 
         # Crear un grupo de seguridad (Security Group)
         security_group = ec2.SecurityGroup(self, "MySecurityGroup",
-            vpc=vpc,  # Asociarlo al VPC creado
+            vpc=vpc,  # Asociarlo al VPC por defecto
             security_group_name="MyInstanceSecurityGroup"
         )
 
@@ -36,8 +35,8 @@ class Ec2ProyectoStack(Stack):
         # Crear la instancia EC2 con el grupo de seguridad
         instance = ec2.CfnInstance(self, "MyInstance",
             instance_type="t2.micro",  # Ajusta el tipo de instancia según sea necesario
-            image_id='ami-0363234289a7b6202',  # Obtén la ID de la imagen AMI
-            subnet_id=vpc.public_subnets[0].subnet_id,  # Usando la primera subred pública del VPC
+            image_id="ami-0363234289a7b6202",  # ID de la AMI de "Cloud9ubuntu22"
+            subnet_id=vpc.public_subnets[0].subnet_id,  # Usando la primera subred pública del VPC por defecto
             key_name="vockey",  # Usamos 'vockey' como el par de claves existente
             security_group_ids=[security_group.security_group_id],  # Asignamos el grupo de seguridad creado
         )
