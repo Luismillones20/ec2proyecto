@@ -12,7 +12,7 @@ env = Environment(account="276665510567", region="us-east-1")
 Ec2ProyectoStack(app, "Ec2ProyectoStack", env=env,{
   synthesizer: new DefaultStackSynthesizer({
     qualifier: 'ec2proj',
-    cloudFormationExecutionRole = 'arn:aws:iam::276665510567:role/LabRole'
+    cloudFormationExecutionRole :'arn:aws:iam::276665510567:role/LabRole'
   }),
 })
 
