@@ -20,26 +20,6 @@ class Ec2ProyectoStack(Stack):
         # ARN del rol existente (LabRole)
         role_arn = "arn:aws:iam::276665510567:role/LabRole"
 
-        # Crear el grupo de seguridad para la instancia
-        security_group = ec2.SecurityGroup(self, "MySecurityGroup",
-            vpc=vpc,
-            security_group_name="MyInstanceSecurityGroup"
-        )
-
-        # Abrir el puerto 22 para SSH
-        security_group.add_ingress_rule(
-            ec2.Peer.any_ipv4(),  # Permitir acceso desde cualquier IP
-            ec2.Port.tcp(22),  # Puerto 22 (SSH)
-            "Allow SSH access from anywhere"
-        )
-
-        # Abrir el puerto 80 para HTTP
-        security_group.add_ingress_rule(
-            ec2.Peer.any_ipv4(),  # Permitir acceso desde cualquier IP
-            ec2.Port.tcp(80),  # Puerto 80 (HTTP)
-            "Allow HTTP access from anywhere"
-        )
-
         # Crear la instancia EC2 con el rol existente usando CfnInstance
         instance = ec2.CfnInstance(self, "MyInstance",
             instance_type="t2.micro",  # Ajusta el tipo de instancia según sea necesario
@@ -47,5 +27,6 @@ class Ec2ProyectoStack(Stack):
             subnet_id=vpc.public_subnets[0].subnet_id,  # Usando la primera subred pública del VPC
             key_name="vockey",  # Usamos 'vockey' como el par de claves existente
             iam_instance_profile=role_arn,  # Asigna el ARN del rol existente
-            security_group_ids=[security_group.security_group_id],  # Asigna el grupo de seguridad
+            security_group_ids=[],  # Agrega grupos de seguridad si es necesario
         )
+
