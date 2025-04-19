@@ -26,7 +26,7 @@ Parameters:
     Type: String
   Qualifier:
     Description: An identifier to distinguish multiple bootstrap stacks in the same environment
-    Default: hnb659fds
+    Default: ec2proj
     Type: String
     AllowedPattern: "[A-Za-z0-9_-]{1,10}"
     ConstraintDescription: Qualifier must be an alphanumeric identifier of at most 10 characters
