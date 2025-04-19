@@ -43,7 +43,7 @@ class Ec2ProyectoStack(Stack):
                 'Key': 'Name',  # Etiqueta para el nombre de la instancia
                 'Value': 'MVDesarrollo'  # Nombre de la instancia en AWS
             }],
-            block_devices=[  # Configuración del disco
+            block_device_mappings=[  # Configuración del disco EBS
                 ec2.CfnInstance.BlockDeviceMappingProperty(
                     device_name="/dev/xvda",  # Nombre del dispositivo
                     ebs=ec2.CfnInstance.EbsProperty(
