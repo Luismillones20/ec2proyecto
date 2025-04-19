@@ -17,33 +17,35 @@ class Ec2ProyectoStack(Stack):
             "us-east-1": "ami-0363234289a7b6202"  # Reemplaza con la ID real de la AMI de "Cloud9ubuntu22"
         })
 
-        # Crear el rol de IAM para la instancia EC2 (puede ser una política básica para EC2)
-        role = iam.Role(self, "MyInstanceRole",
-            assumed_by=iam.ServicePrincipal("ec2.amazonaws.com"),
-            managed_policies=[iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEC2ReadOnlyAccess")]
-        )
+        # ARN del rol existente (LabRole)
+        role_arn = "arn:aws:iam::276665510567:role/LabRole"
 
-        # Crear la instancia EC2 con los parámetros especificados
-        instance = ec2.Instance(self, "MyInstance",
-            instance_type=ec2.InstanceType("t2.micro"),  # Ajusta el tipo de instancia según sea necesario
-            machine_image=ami,
+        # Crear el grupo de seguridad para la instancia
+        security_group = ec2.SecurityGroup(self, "MySecurityGroup",
             vpc=vpc,
-            key_pair=ec2.KeyPair.from_key_pair_name(self, "KeyPair", "vockey"),  # Usamos 'from_key_pair_name' en lugar de 'from_key_name'
-            role=role,
-            block_devices=[
-                ec2.BlockDevice(
-                    device_name="/dev/xvda",
-                    volume=ec2.BlockDeviceVolume.ebs(20)  # 20 GB de disco
-                )
-            ]
+            security_group_name="MyInstanceSecurityGroup"
         )
 
-        # Configuración de los puertos abiertos
-        instance.connections.allow_from_any_ipv4(
-            ec2.Port.tcp(22),  # Puerto 22 para SSH
+        # Abrir el puerto 22 para SSH
+        security_group.add_ingress_rule(
+            ec2.Peer.any_ipv4(),  # Permitir acceso desde cualquier IP
+            ec2.Port.tcp(22),  # Puerto 22 (SSH)
             "Allow SSH access from anywhere"
         )
-        instance.connections.allow_from_any_ipv4(
-            ec2.Port.tcp(80),  # Puerto 80 para HTTP
+
+        # Abrir el puerto 80 para HTTP
+        security_group.add_ingress_rule(
+            ec2.Peer.any_ipv4(),  # Permitir acceso desde cualquier IP
+            ec2.Port.tcp(80),  # Puerto 80 (HTTP)
             "Allow HTTP access from anywhere"
+        )
+
+        # Crear la instancia EC2 con el rol existente usando CfnInstance
+        instance = ec2.CfnInstance(self, "MyInstance",
+            instance_type="t2.micro",  # Ajusta el tipo de instancia según sea necesario
+            image_id=ami.get_image(self).image_id,  # Obtén la ID de la imagen AMI
+            subnet_id=vpc.public_subnets[0].subnet_id,  # Usando la primera subred pública del VPC
+            key_name="vockey",  # Usamos 'vockey' como el par de claves existente
+            iam_instance_profile=role_arn,  # Asigna el ARN del rol existente
+            security_group_ids=[security_group.security_group_id],  # Asigna el grupo de seguridad
         )
