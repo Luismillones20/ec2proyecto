@@ -231,59 +231,6 @@ Resources:
               Bool:
                 aws:SecureTransport: "false"
             Principal: "*"
-  ContainerAssetsRepository:
-    Type: AWS::ECR::Repository
-    Properties:
-      ImageTagMutability: IMMUTABLE
-      LifecyclePolicy:
-        LifecyclePolicyText: 
-          {
-            "rules": [
-              {
-                "rulePriority": 1,
-                "description": "Untagged images should not exist, but expire any older than one year",
-                "selection": {
-                  "tagStatus": "untagged",
-                  "countType": "sinceImagePushed",
-                  "countUnit": "days",
-                  "countNumber": 365
-                },
-                "action": { "type": "expire" }
-              }
-            ]
-          }
-      RepositoryName:
-        Fn::If:
-          - HasCustomContainerAssetsRepositoryName
-          - Fn::Sub: ${ContainerAssetsRepositoryName}
-          - Fn::Sub: cdk-${Qualifier}-container-assets-${AWS::AccountId}-${AWS::Region}
-      RepositoryPolicyText:
-        Version: "2012-10-17"
-        Statement:
-          - Sid: LambdaECRImageRetrievalPolicy
-            Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action:
-              - ecr:BatchGetImage
-              - ecr:GetDownloadUrlForLayer
-            Condition:
-              StringLike:
-                aws:sourceArn:
-                  Fn::Sub: arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:*
-          - Sid: EmrServerlessImageRetrievalPolicy
-            Effect: Allow
-            Principal:
-              Service: emr-serverless.amazonaws.com
-            Action:
-              - ecr:BatchGetImage
-              - ecr:GetDownloadUrlForLayer
-              - ecr:DescribeImages
-            Condition:
-              StringLike:
-                aws:sourceArn:
-                  Fn::Sub: arn:${AWS::Partition}:emr-serverless:${AWS::Region}:${AWS::AccountId}:/applications/*
-  
   
   CdkBoostrapPermissionsBoundaryPolicy:
     Condition: ShouldCreatePermissionsBoundary
