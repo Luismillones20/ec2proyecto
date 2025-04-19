@@ -14,7 +14,7 @@ class Ec2ProyectoStack(Stack):
 
         # Definir la AMI de Cloud9Ubuntu22 (reemplazar con la ID de la AMI correcta)
         ami = ec2.MachineImage.generic_linux({
-            "us-west-2": "ami-0363234289a7b6202"  # Reemplaza con la ID real de la AMI de "Cloud9ubuntu22"
+            "us-east-1": "ami-0363234289a7b6202"  # Reemplaza con la ID real de la AMI de "Cloud9ubuntu22"
         })
 
         # Crear el rol de IAM para la instancia EC2 (puede ser una política básica para EC2)
