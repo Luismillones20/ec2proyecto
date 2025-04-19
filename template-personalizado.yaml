@@ -118,15 +118,7 @@ Resources:
       BucketEncryption:
         ServerSideEncryptionConfiguration:
           - ServerSideEncryptionByDefault:
-              SSEAlgorithm: aws:kms
-              KMSMasterKeyID:
-                Fn::If:
-                  - CreateNewKey
-                  - Fn::Sub: ${FileAssetsBucketEncryptionKey.Arn}
-                  - Fn::If:
-                      - UseAwsManagedKey
-                      - Ref: AWS::NoValue
-                      - Fn::Sub: ${FileAssetsBucketKmsKeyId}
+              SSEAlgorithm: aws:kms  # Usando la clave gestionada por AWS
       PublicAccessBlockConfiguration:
         Fn::If:
           - UsePublicAccessBlockConfiguration
@@ -228,16 +220,6 @@ Outputs:
     Description: The domain name of the S3 bucket owned by the CDK toolkit stack
     Value:
       Fn::Sub: ${StagingBucket.RegionalDomainName}
-  FileAssetKeyArn:
-    Description: The ARN of the KMS key used to encrypt the asset bucket (deprecated)
-    Value:
-      Fn::If:
-        - CreateNewKey
-        - Fn::Sub: ${FileAssetsBucketEncryptionKey.Arn}
-        - Fn::Sub: ${FileAssetsBucketKmsKeyId}
-    Export:
-      Name:
-        Fn::Sub: CdkBootstrap-${Qualifier}-FileAssetKeyArn
   BootstrapVersion:
     Description: The version of the bootstrap resources that are currently mastered in this stack
     Value:
