@@ -12,10 +12,6 @@ class Ec2ProyectoStack(Stack):
         # Crear un VPC (Virtual Private Cloud) para la instancia EC2
         vpc = ec2.Vpc(self, "MyVpc", max_azs=3)  # Puedes cambiar el número de zonas de disponibilidad según lo necesites
 
-        # Definir la AMI de Cloud9Ubuntu22 (reemplazar con la ID de la AMI correcta)
-        ami = ec2.MachineImage.generic_linux({
-            "us-east-1": "ami-0363234289a7b6202"  # Reemplaza con la ID real de la AMI de "Cloud9ubuntu22"
-        })
 
         # Crear un grupo de seguridad (Security Group)
         security_group = ec2.SecurityGroup(self, "MySecurityGroup",
@@ -40,7 +36,7 @@ class Ec2ProyectoStack(Stack):
         # Crear la instancia EC2 con el grupo de seguridad
         instance = ec2.CfnInstance(self, "MyInstance",
             instance_type="t2.micro",  # Ajusta el tipo de instancia según sea necesario
-            image_id=ami.get_image(self).image_id,  # Obtén la ID de la imagen AMI
+            image_id='ami-0363234289a7b6202',  # Obtén la ID de la imagen AMI
             subnet_id=vpc.public_subnets[0].subnet_id,  # Usando la primera subred pública del VPC
             key_name="vockey",  # Usamos 'vockey' como el par de claves existente
             security_group_ids=[security_group.security_group_id],  # Asignamos el grupo de seguridad creado
