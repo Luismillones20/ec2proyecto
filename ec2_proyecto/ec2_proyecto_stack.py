@@ -14,7 +14,7 @@ class Ec2ProyectoStack(Stack):
 
         # Definir la AMI de Cloud9Ubuntu22 (reemplazar con la ID de la AMI correcta)
         ami = ec2.MachineImage.generic_linux({
-            "us-west-2": "ami-0363234289a7b6202"  
+            "us-west-2": "ami-0363234289a7b6202"  # Reemplaza con la ID real de la AMI de "Cloud9ubuntu22"
         })
 
         # Crear el rol de IAM para la instancia EC2 (puede ser una política básica para EC2)
@@ -28,7 +28,7 @@ class Ec2ProyectoStack(Stack):
             instance_type=ec2.InstanceType("t2.micro"),  # Ajusta el tipo de instancia según sea necesario
             machine_image=ami,
             vpc=vpc,
-            key_pair=ec2.KeyPair.from_key_name(self, "KeyPair", "vockey"),  # Usa 'key_pair' en lugar de 'key_name'
+            key_pair=ec2.KeyPair.from_key_pair_name(self, "KeyPair", "vockey"),  # Usamos 'from_key_pair_name' en lugar de 'from_key_name'
             role=role,
             block_devices=[
                 ec2.BlockDevice(
