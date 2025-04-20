@@ -38,12 +38,13 @@ class Ec2ProyectoStack(Stack):
             image_id="ami-0363234289a7b6202",  # ID de la AMI de "Cloud9ubuntu22"
             subnet_id=vpc.public_subnets[0].subnet_id,  # Usando la primera subred pública del VPC por defecto
             key_name="vockey",  # Usamos 'vockey' como el par de claves existente
+            tags=[  # Etiquetas con formato correcto
+                {
+                    'Key': 'Name',  # Clave para el nombre de la instancia
+                    'Value': 'ec2-desarrollo-luis'  # Nombre de la instancia en AWS
+                }
+            ],
             security_group_ids=[security_group.security_group_id],  # Asignamos el grupo de seguridad creado
-            tags=[{
-                'Key': 'ec2-name',  # Usar un nombre de tag diferente
-                'Value': 'ec2-desarrollo-luis'  # Nombre de la instancia
-            }],
-
             block_device_mappings=[  # Configuración del disco EBS
                 ec2.CfnInstance.BlockDeviceMappingProperty(
                     device_name="/dev/xvda",  # Nombre del dispositivo
