@@ -1,11 +1,8 @@
 from aws_cdk import (
     Stack,
     aws_ec2 as ec2,
-    aws_iam as iam,
-
 )
 from constructs import Construct
-import aws_cdk as cdk
 
 class Ec2ProyectoStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs):
@@ -40,7 +37,7 @@ class Ec2ProyectoStack(Stack):
             image_id="ami-0363234289a7b6202",  
             subnet_id=vpc.public_subnets[0].subnet_id,  
             key_name="vockey",  
-            tags=[cdk.CfnTag(
+            tags=[aws_cdk.CfnTag(
                 key="Name",
                 value="Ec2-Instancia-Luis"
             )],
