@@ -42,7 +42,7 @@ class Ec2ProyectoStack(Stack):
             tags=[{
                 'Key': 'ec2-name',  # Usar un nombre de tag diferente
                 'Value': 'ec2-desarrollo-luis'  # Nombre de la instancia
-            }]
+            }],
 
             block_device_mappings=[  # Configuración del disco EBS
                 ec2.CfnInstance.BlockDeviceMappingProperty(
