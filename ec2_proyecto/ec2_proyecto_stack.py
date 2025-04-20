@@ -1,6 +1,7 @@
 from aws_cdk import (
     Stack,
     aws_ec2 as ec2,
+    CfnTag
 )
 from constructs import Construct
 
@@ -37,7 +38,7 @@ class Ec2ProyectoStack(Stack):
             image_id="ami-0363234289a7b6202",  
             subnet_id=vpc.public_subnets[0].subnet_id,  
             key_name="vockey",  
-            tags=[aws_cdk.CfnTag(
+            tags=[CfnTag(
                 key="Name",
                 value="Ec2-Instancia-Luis"
             )],
